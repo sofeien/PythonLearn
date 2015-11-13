@@ -1,2 +1,2 @@
 # PythonLearn
-python的一些学习代码
+练习拙作，用来记录学习的点滴
