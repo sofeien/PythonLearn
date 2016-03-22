@@ -6,9 +6,8 @@ from PIL import Image
 from io import BytesIO
 import os
 import logging
-logging.basicConfig(level=logging.WARNING)
 
-start_url = 'http://huaban.com/favorite/anime/'
+start_url = 'http://huaban.com/pins/653499253/'
 web_queue = queue.Queue()
 pic_queue = queue.Queue()
 check_set = set()
@@ -53,7 +52,15 @@ def down_pic(pic_url):
     last_url_re = re.compile(r'app\["page"\].*?"key":"(.*?)", "type":"image/(.*?)"')
     try:
         last_url, mode = last_url_re.findall(html)[0]
+        try:
+            last_url = last_url[:last_url.index('"')]
+        except ValueError:
+            pass
     except IndexError:
+        logging.warning('无法匹配')
+        return
+    except Exception as e:
+        logging.warning('错误:{}'.format(e))
         return
     logging.info('last_url:{}  mode:{}'.format(last_url, mode))
     pic_url = base_url + last_url
@@ -73,7 +80,6 @@ def down_pic(pic_url):
 class ExtractUrlThread(Thread):
     def __init__(self):
         Thread.__init__(self)
-        self.name = 'extract_thread'
 
     def run(self):
         while True:
@@ -84,7 +90,6 @@ class ExtractUrlThread(Thread):
 class DownPicThread(Thread):
     def __init__(self):
         Thread.__init__(self)
-        self.name = 'downpic_thread'
 
     def run(self):
         while True:
@@ -93,7 +98,7 @@ class DownPicThread(Thread):
             down_pic(pic_url)
 
 
-def main(limit=10000):
+def main(limit=1000):
     web_queue.put(start_url)
     t1 = ExtractUrlThread()
     t2 = DownPicThread()
