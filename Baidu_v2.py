@@ -49,7 +49,6 @@ class BaiduSpider:
         else:
             generator = (self.url_temp2.format(word=urllib.parse.quote(word), cg=cg, pn=x * 30) for x in range(0, n))
             for page in generator:
-                print(page)
                 try:
                     r = self.s.get(page)
                 except TimeoutError:
@@ -97,4 +96,3 @@ class BaiduSpider:
 if __name__ == "__main__":
     word = '头像'
     BaiduSpider().load(word)
-    
