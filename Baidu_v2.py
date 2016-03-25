@@ -74,6 +74,9 @@ class BaiduSpider:
             if r.status_code != 200:
                 raise Exception('not connect')
             pic_path = os.path.join(path, name)
+            while os.path.isfile(pic_path):
+                name = 'new_' + name
+                pic_path = os.path.join(path, name)
             with open(pic_path, 'wb') as f:
                 for chunk in r.iter_content(1024 * 10):
                     f.write(chunk)
@@ -94,5 +97,5 @@ class BaiduSpider:
         print('下载成功{}张，下载失败{}张'.format(self.getNum, self.failNum))
 
 if __name__ == "__main__":
-    word = '头像'
+    word = '仙剑3'
     BaiduSpider().load(word)
