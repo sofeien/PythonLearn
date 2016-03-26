@@ -1,8 +1,11 @@
 #coding='utf-8'
 from tkinter import *
+from tkinter.ttk import *
 import requests
 import urllib.parse
 import os
+import time
+import threading
 
 class BaiduSpider:
     def __init__(self):
@@ -91,22 +94,41 @@ class BaiduSpider:
         self._getpage(word, n, size, path, mode, cg)
         return '下载成功{}张，下载失败{}张'.format(self.getNum, self.failNum)
 
-def main():
-    global key_word
-    global page
-    global choice
-    global status
+    def countNum(self):
+        return self.getNum+self.failNum
+
+
+def main(*args):
+    baidu = BaiduSpider()
     word = key_word.get()
     n = int(page.get())
-    status['text']='load...'
-    if choice==1:
-        result = BaiduSpider().load(word, n=n)
-    else:
-        result = BaiduSpider().load(word, n=n, mode=0, cg='wallpaper')
-    status['text']=result
-    # else:
-    #     BaiduSpider().load(word, n=n, mode=0, cg='head')
+    # print(baidu.getNum())
+    def loadPic():
+        # global key_word
+        # global page
+        global choice
+        global status
 
+        status['text']='load...'
+        if choice==1:
+            result = baidu.load(word, n=n)
+        else:
+            result = baidu.load(word, n=n, mode=0, cg='wallpaper')
+        status['text']=result
+
+    def loadStatus(*args):
+        # print(baidu.countNum())
+        total = n*30
+        done = baidu.countNum()
+        while done<total:
+            done = baidu.countNum()
+            p1["value"] = done*100/total
+            root.update()
+            # print(done)
+            time.sleep(0.5)
+    threading.Thread(target=loadPic).start()
+    threading.Thread(target=loadStatus).start()
+    return
 
 root = Tk()
 root.title('百度图片爬虫')
@@ -127,11 +149,16 @@ f2.pack(padx=10, pady=(5, 10))
 choice = IntVar()
 Radiobutton(f3, text="普通", variable=choice, value=1).grid(row=0, column=0, padx=5)
 Radiobutton(f3, text="壁纸", variable=choice, value=2).grid(row=0, column=1, padx=5)
-# Radiobutton(f3, text="头像", variable=choice, value=3).grid(row=0, column=2, padx=5)
 choice.set(1)
-searchBtn = Button(f2, text='搜索', width=20, command=main)
-searchBtn.grid(row=0, columnspan=2)
+searchBtn = Button(f2, text='下载',command=main)
+searchBtn.grid(row=0)
+
+p1 = Progressbar(f2, mode="determinate", orient=HORIZONTAL)
+p1.grid(row=0,column=1, padx=(5,0))
+p1["maximum"] = 100
+p1["value"] = 0
+
 key_word.focus_set()
-status = Label(root, text="status")
+status = Label(root, text="")
 status.pack(side=BOTTOM, fill=X)
 root.mainloop()
