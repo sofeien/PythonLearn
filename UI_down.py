@@ -14,7 +14,6 @@ pic_list = []
 fail_list = []
 total = 0
 current = 0
-url = 'http://king-t-stant.tumblr.com/tagged/%E5%B0%91%E5%A5%B3%E6%98%A0%E7%94%BB'
 
 def find_dir(*args):
     """设置保存文件夹"""
@@ -121,7 +120,7 @@ def main(*args):
 root = Tk()
 root.title('网页图片爬虫')
 root.geometry("400x120+100+100")
-Label(root, text="URL:").grid(row=1,column=1, sticky="WE")
+Label(root, text="URL:").grid(row=1,column=1)
 url = StringVar()
 entry = Entry(root, textvariable=url)
 entry.grid(row=1, column=2, sticky="WE")
