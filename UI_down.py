@@ -110,6 +110,8 @@ def downpic(*args):
     print("下载结束")
 
 def main(*args):
+    if not os.path.isdir(path.get()):
+        os.makedirs(os.path.normpath(path.get()))
     p["value"] = 0
     root.update()
     print("下载开始")
@@ -127,7 +129,7 @@ entry.grid(row=1, column=2, sticky="WE")
 # Label(root,text="保存路径:").grid(row=2, column=1)
 path = StringVar()
 Entry(root, textvariable=path, state=["readonly"]).grid(row=2, column=2, sticky="WE")
-path.set(r'C:\Users\cadencheng\Desktop\新建文件夹')
+path.set(r'C:\Users\Administrator\Desktop\新建文件夹')
 Button(root, text="选择文件夹", command=find_dir).grid(row=2, column=1)
 for child in root.winfo_children():
     child.grid(padx=5, pady=5)
