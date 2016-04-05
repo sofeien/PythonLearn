@@ -52,7 +52,7 @@ def savepic(u, *args):
 def getpic(u):
     """提取图片地址"""
     global pic_list
-    pic_re = re.compile(r'src="(.*?(?:png|jpg|gif|jpeg))"')
+    pic_re = re.compile(r'src="([^>]*?(?:png|jpg|gif|jpeg))"')
     try:
         r = requests.get(u)
         for pic in pic_re.findall(r.text):
@@ -101,7 +101,7 @@ def downpic(*args):
         savepic(u)
     print(fail_list)
     if len(fail_list)>0:
-        json.dump(fail_list,open(os.path.join(os.path.normpath(path.get()),'log.txt'),"w"))
+        json.dump(fail_list,open(os.path.join(os.path.normpath(path.get()),'log.txt'),"w"),indent=2)
     url_list = []
     pic_list = []
     fail_list = []
